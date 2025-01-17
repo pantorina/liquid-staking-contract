@@ -91,3 +91,36 @@ Validator sends messages to
 
 3. If Validator didn't participated in election, he must return unused load. Otherwise, anybody can `return_unused_loan` and get `STAKE_RECOVER_FINE`, in particular:
 > If controller is in "rest" state, `borrowed_amount > 0` and `utime_since > borrowed_time`, controller has enough funds on balance, anybody can trigger `return_unused_loan` and get reward
+
+## Image Upload Functionality
+
+### Process of Uploading Images to the Server
+
+To upload an image to the server, follow these steps:
+
+1. Send a POST request to the server with the image file included in the request body.
+2. The server will process the image and store it in the designated directory.
+3. The server will return a response containing the URL of the uploaded image.
+
+### Example Image Upload Request
+
+```http
+POST /upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="example.jpg"
+Content-Type: image/jpeg
+
+<image data>
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+```
+
+### Example Image Upload Response
+
+```json
+{
+  "success": true,
+  "url": "https://example.com/uploads/example.jpg"
+}
+```

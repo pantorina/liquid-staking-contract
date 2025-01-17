@@ -6,7 +6,22 @@ import { compile, NetworkProvider, sleep } from '@ton-community/blueprint';
 import {JettonWallet as PoolJettonWallet } from '../wrappers/JettonWallet';
 import { Controller } from '../wrappers/Controller';
 import { Librarian, LibrarianConfig } from '../wrappers/Librarian';
+import multer from 'multer';
+import express from 'express';
+import path from 'path';
 
+const app = express();
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/upload', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    res.status(200).json({ success: true, url: imageUrl });
+});
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const waitForTransaction = async (provider:NetworkProvider, address:Address,
                                   action:string = "transaction",

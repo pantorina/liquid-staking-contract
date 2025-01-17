@@ -73,3 +73,48 @@ Projected pool jetton/TON ratio is equal to `projected_total_balance/projected_s
 - `validator` - `slice`  - address of validator wallet
 - `pool` - `slice`  - address of pool wallet
 - `sudoer` - `slice`  - address of sudoer wallet
+
+# Image Upload Methods
+
+## Parameters and Return Values for Image Upload Methods
+
+### Parameters
+
+- `image`: The image file to be uploaded.
+- `filename`: The name of the image file.
+- `content_type`: The MIME type of the image file.
+
+### Return Values
+
+- `success`: A boolean indicating whether the upload was successful.
+- `url`: The URL of the uploaded image.
+
+## Example Image Upload Method Calls
+
+### Example 1: Uploading a JPEG Image
+
+```http
+POST /upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="example.jpg"
+Content-Type: image/jpeg
+
+<image data>
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+```
+
+### Example 2: Uploading a PNG Image
+
+```http
+POST /upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="example.png"
+Content-Type: image/png
+
+<image data>
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+```
