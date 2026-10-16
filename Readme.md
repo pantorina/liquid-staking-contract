@@ -20,7 +20,7 @@ Node operators can work for pool by using it's funds as validation stake and sha
 ### Terms
 - elector: smart-contract which accepts stakes, conduct election, decides next active validator keys and distribute reward for validation
 - Сontroller: smart-contract which manage funds for stake 
-- validator: actor which running TON node and (try to) participate in elections, and if elected validate new blocks. It knows it's private validator key and also "partially" control it's own Сontroller (can send and receive stakes, but can not withdraw all money for itself)
+- validator: actor which running TON node and (try to) participate in elections, and if elected validate new blocks. It knows it's private validator key and also "partially" control it's own Сont[...]
 - nominator: actor who have assets (TON) and want to lend them to validators through JettonPool to get interest on it
 - jettons: TEP-74+TEP-89 Jettons : scalable tokens on TON blockchain
 
@@ -48,9 +48,9 @@ Node operators can work for pool by using it's funds as validation stake and sha
     6. sends profits share
     7. updates parameters upon request: deposit params (open?, optimistic?), roles (halter, sudoer, interest_manager, governor), state (unhalt).
 
-**pool jetton** is jetton which is used to manage assets lended to the pool. It also has DAO voting capabilities to be used for voting for network config parameters.
+**pool jetton** is jetton which is used to manage assets lended to the pool. It also has DAO voting capabilities to be used for voting for network config updates.
 
-**Deposits/Withdrawals**: pool jetton/TON ratio is updated once per round. In strict mode, we assume that this ratio is not known till the end of the round and thus actual deposits/withdrawals should be postponed till the end of the round. Besides, even in optimistic mode (when deposits/withdrawals are processed through projected ratio), withdrawals often can not be made if pool has no enough TON. Thus **Deposits/Withdrawals** are special contracts which represent deposit/withdrawals in process. Can be implemented as NFT or Jettons so all wallets will be able to interact with it.
+**Deposits/Withdrawals**: pool jetton/TON ratio is updated once per round. In strict mode, we assume that this ratio is not known till the end of the round and thus actual deposits/withdrawals sho[...]
 
 #### Roles
 
@@ -58,7 +58,7 @@ Node operators can work for pool by using it's funds as validation stake and sha
 Halts all parts of the system if necessary.
 
 **Sudoer**
-Empty by default role, which is able to send arbitrary message from arbitrary part of the system. Sudoer only become active if set more than *sudoer_threshold* seconds ago (expected to be 24h). Can upgrade code and directly update data.
+Empty by default role, which is able to send arbitrary message from arbitrary part of the system. Sudoer only become active if set more than *sudoer_threshold* seconds ago (expected to be 24h). Ca[...]
 
 **Approver**
 Role to approve Controllers for borrow requests
@@ -78,12 +78,12 @@ Each role may be performed by a wallet, multisignature wallet or DAO. It is expe
 - *Governance* will be jetton-based DAO with it's owng GJ: governance jetton. Optionally, filter of outcoming messages can be added that resticts setting sudoer and othe parameters.
 
 ## Optimistic deposits/withdrawals
-By default it is assumed that ratio pool jetton/TON in unpredictable since validators can be slashed and thus it is impossible with 100% probability say how much pool balance will change on round end. If, indeed, ratio can fluctuate both ways (to increase and to decrease) than we need to postpone all deposits and withdrawals and process them immediately on round end. Otherwise, if lets say one knows that pool validators will be severely slashed and withdraw funds before that, he will avaid loss by distributing it to other holders.
+By default it is assumed that ratio pool jetton/TON in unpredictable since validators can be slashed and thus it is impossible with 100% probability say how much pool balance will change on round [...]
 
-However, since protocol ensures that validator have enough funds to pay expected fines and credit interest is agreed on during loan granting, under normal conditions amount of returned TON on the round end is determined and thus it is possible to calculate projected pool jetton / TON ratio. Given that it is possible to process deposits and withdrawals in *optimistic* mode: deposits should be converted to pool jetton basing on the projected ratio at the end of the round, and withdrawals should be converted to TON basing on the current ratio (like this funds do not work in the round). This optimistic mode should be activated only if there are measures to protect agains validator cheating attemts: for instance validator fully disclose himself.
+However, since protocol ensures that validator have enough funds to pay expected fines and credit interest is agreed on during loan granting, under normal conditions amount of returned TON on the [...]
 
 ### Fill or Kill and Immediate withdrawals
-If *optimistic* mode is activated, still withdrawals often can not be processed immediately if pool has not enough TONs. In this case Withdrawal bill should be minted which may not be optimal for nominator. At the same time, sometimes nominator want wait till the end of the round to get profit of this round even if *optimistic* mode is on.
+If *optimistic* mode is activated, still withdrawals often can not be processed immediately if pool has not enough TONs. In this case Withdrawal bill should be minted which may not be optimal for [...]
 To control this behavior there are two flags in burn requests:
 - `wait_till_round_end` - if `true` Withdrawal bill will be minted regardless of possibility to make immediate withdrawal
 - `fill_or_kill` - if `true` and there is no enough TON, burn will be reverted via minting pool jettons back.
@@ -92,10 +92,10 @@ To control this behavior there are two flags in burn requests:
 ## Components
 ### Сontroller
 Сontroller accounts funds of validator and funds borrowed from Validation Pool. It can process deposits from Validator and from Validation Pool (later Pool).
-Upon request from validator it can send stake from it's balance to Elector. Upon request it can requests withdrawal from Elector, but only after at least three updated of validator sets ([here](https://github.com/ton-blockchain/nominator-pool/blob/main/func/pool.fc#L566) is why it is necessary for correct stake account). Thus Controller need ability to "count" validator sets updates, for that purpose there is `update_set_hash` request.
-Both withdrawal and `update_set_hash` requests can be sent by validator or, after grace period, by anybody. In the latter case sender gets bounty out of validator funds. This functionality protects against non-responding validator. 
+Upon request from validator it can send stake from it's balance to Elector. Upon request it can requests withdrawal from Elector, but only after at least three updated of validator sets ([here](ht[...]
+Both withdrawal and `update_set_hash` requests can be sent by validator or, after grace period, by anybody. In the latter case sender gets bounty out of validator funds. This functionality protect[...]
 
-Validator-controler specify maximal interest rate, minimal and maximal TON credit size in borrow request. Validator can only request such parameters that it has interest plus recommended fine on it's balance. It can only request funds if is approved by Approver.
+Validator-controler specify maximal interest rate, minimal and maximal TON credit size in borrow request. Validator can only request such parameters that it has interest plus recommended fine on i[...]
 
 Upon receiving stake from Elector, Сontroller sends borrowed assets plus interest to the Validation pool.
 
@@ -109,7 +109,7 @@ Handlers of incoming messages
 - stake from Elector (only from Elector)
 - Governance requests (from Governance, Halter, Sudoer)
 - approve/disapprove (from Approver)
-bounces
+- bounces
 - bounce of sent stake to Elector (only from Elector)
 
 Outcoming messages:
@@ -127,7 +127,7 @@ halt Сontroller, and expect that Governance will "manually" decide what to do, 
 ### Pool
 
 #### Controller part
-Process lending requests from Validator Approvals: send funds if there are enough funds and request fits rate and limits. Saves to *active controller list* (it is expected that there will be no more than hundreds of those).
+Process lending requests from Validator Approvals: send funds if there are enough funds and request fits rate and limits. Saves to *active controller list* (it is expected that there will be no m[...]
 
 Receives debt repayment from validator-controlers: remove them from *active controller list*
 
@@ -149,13 +149,13 @@ On aggregation event (lending round end):
 - mints pool jetton to *Deposit Payout* minter for distribution
 - sends TONs to *Withdrawal Payout* minter to fulfill withdrawals
 
-Handlers of incoming messages
+Handers of incoming messages
 - borrow request (only from Сontroller)
 - Governance requests (from Governance, Halter, Sudoer)
 - debt repayment (only from Controller in *active controller list*)
 - deposits (from any user)
 - burn notifications (from pool jetton wallets)
-bounces
+- bounces
 - TODO
 
 Outcoming messages:
@@ -177,9 +177,9 @@ Postponed till the end of the round deposits/withdrawals can be represented on-c
 ### Payout NFT
 In this scheme Payout is NFT collection and "conversion obligation" is an NFT. Each round a new payouts collections for deposit and withdrawal are created.
 
-When you deposit TON to pool you immediately get Deposit Bill. Later after current validation round ends and funds are released from Elector, correct poolJetton/TON ratio is discovered, amount of pool jetton corresponded to total deposits value is calculated and sent to Deposit Collection. After that Deposit Collection send *burn request* to the last minted NFT which trigger the conversion of that NFT and simulatneously sending *burn request* ton the NFT before that. Here the idea that NFTs are linked list is used to iterate through whole collection.
+When you deposit TON to pool you immediately get Deposit Bill. Later after current validation round ends and funds are released from Elector, correct poolJetton/TON ratio is discovered, amount of[...]
 
-This implementation allows processed deposits/withdrawals to be sent to other users as a whole and allows autoconversion to assets when ready. **In current implementation it is the main used mechanism**
+This implementation allows processed deposits/withdrawals to be sent to other users as a whole and allows autoconversion to assets when ready. **In current implementation it is the main used mech[...]
 
 # Security
 
@@ -188,3 +188,9 @@ The liquid staking contracts has been audited by security companies:
 - CertiK: [Audit Report](https://skynet.certik.com/projects/tonstakers)
 
 Feel free to review these reports for a detailed understanding of the contracts security measures.
+
+## License
+
+This repository is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+SPDX-License-Identifier: MIT
