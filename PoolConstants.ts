@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import {toNano} from "ton-core";
 
 export abstract class Conf {

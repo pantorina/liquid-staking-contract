@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { Address, Tuple, TupleItem, TupleItemInt, TupleReader, toNano } from "ton";
 import { Cell, Slice, Sender, SenderArguments, ContractProvider, Message, beginCell, Dictionary, MessageRelaxed, Transaction, fromNano } from "ton-core";
 import { Blockchain, BlockchainTransaction, MessageParams, SendMessageResult, SmartContract, SmartContractTransaction } from "@ton-community/sandbox";
